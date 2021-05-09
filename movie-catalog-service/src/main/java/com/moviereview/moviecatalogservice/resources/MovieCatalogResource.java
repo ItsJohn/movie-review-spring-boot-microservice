@@ -36,13 +36,10 @@ public class MovieCatalogResource {
 
     @GetMapping("/{userID}")
     public List<CatalogItem> getCatalog(@PathVariable("userID") String userID) {
-        UserRating userRating = callMircoService("http://localhost:8083/ratingsdata/users/" + userID, UserRating.class);
+        UserRating userRating = callMircoService("http://movie-data-service/ratingsdata/users/" + userID, UserRating.class);
 
         return userRating.getRatings().stream().map(rating -> {
-//            Rest Template is deprecated
-//            Movie movie = this.restTemplate.getForObject("http://localhost:8082/movies/3", Movie.class);
-
-            Movie movie = callMircoService("http://localhost:8082/movies/" + rating.getMovieID(), Movie.class);
+            Movie movie = callMircoService("http://movie-info-service/movies/" + rating.getMovieID(), Movie.class);
 
             return new CatalogItem(movie.getName(), "test", rating.getRating());
         }).collect(Collectors.toList());
